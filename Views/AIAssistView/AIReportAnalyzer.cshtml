@@ -1,0 +1,338 @@
+@using Syncfusion.EJ2.InteractiveChat
+@using Syncfusion.EJ2
+@using Newtonsoft.Json
+
+@section ControlsSection{
+    <div class="control-section">
+        <div class="report-generator">
+            <h3>AI Report Analyzer</h3>
+            
+            <div class="form-group">
+                <label>Paste your report data (CSV, JSON, or plain text):</label>
+                <textarea id="reportData" rows="10" class="form-control" 
+                          placeholder="Job ID, Client, Status, Days Open&#10;1001, ABC Corp, Open, 5&#10;1002, XYZ Inc, Delayed, 12"></textarea>
+            </div>
+            
+            <button onclick="analyzeReport()" class="btn btn-primary">Analyze with AI</button>
+            
+            <div class="aiassist-container">
+                @Html.EJS().AIAssistView("reportAssistView").ToolbarSettings(new AIAssistViewToolbarSettings() { Items = ViewData["ToolbarItems"], ItemClicked = "toolbarItemClicked" }).PromptSuggestions((string[])ViewData["PromptSuggestionData"]).BannerTemplate("#bannerContent").PromptRequest("onReportPromptRequest").Render()
+            </div>
+        </div>
+    </div>
+    @*custom code start*@
+    <style>
+        .report-generator {
+            width: 80vw;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .report-generator h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .aiassist-container {
+            margin-top: 20px;
+        }
+
+        .aiassist-container .e-aiassist-view {
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .aiassist-container .banner-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 200px;
+            text-align: center;
+            color: #666;
+        }
+
+        .aiassist-container .banner-content .e-assistview-icon:before {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .aiassist-container .banner-content h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+        }
+
+        /* Analysis report styling */
+        .analysis-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+
+        .analysis-section h5 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .status-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-badge.open {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-badge.delayed {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .status-count {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .status-desc {
+            color: #666;
+            font-style: italic;
+        }
+
+        .overdue-alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .overdue-item {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .status-delayed {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .days-critical {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .risk-high {
+            background-color: #dc3545;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #007bff;
+        }
+
+        .metric-card h6 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .recommendations {
+            background-color: #e8f5e8;
+            border: 1px solid #d4edda;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendations h5 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .report-generator {
+                width: 95vw;
+                padding: 15px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+    @*custom code end*@
+}
+
+@section PreScripts {
+    <script>
+        var prompts = @Html.Raw(Json.Encode(ViewData["PromptResponseData"]));
+        var suggestions = @Html.Raw(Json.Encode(ViewData["PromptSuggestionData"]));
+
+        function analyzeReport() {
+            var data = document.getElementById('reportData').value.trim();
+            if (!data) {
+                alert('Please enter some report data to analyze.');
+                return;
+            }
+            
+            var prompt = `Analyze this job data and provide insights:\n\n${data}\n\nProvide: 1) Summary statistics, 2) Issues identified, 3) Recommendations`;
+            
+            // Trigger AI analysis
+            var assistView = document.getElementById('reportAssistView').ej2_instances[0];
+            assistView.executePrompt(prompt);
+        }
+
+        function onReportPromptRequest(args) {
+            setTimeout(() => {
+                var foundPrompt = prompts.find(prompt => prompt.Prompt == args.prompt);
+                var defaultResponse = '<div class="analysis-section"><h4>🤖 AI Analysis Processing</h4><p>For real-time report analysis, connect the AI AssistView control to your preferred AI service, such as OpenAI or Azure Cognitive Services. Ensure you obtain the necessary API credentials to authenticate and enable seamless integration.</p><p><strong>Sample Analysis:</strong> The system would typically analyze your data for patterns, trends, and insights including:</p><ul><li>Statistical summaries and metrics</li><li>Issue identification and risk assessment</li><li>Actionable recommendations</li><li>Performance benchmarking</li></ul></div>';
+                
+                this.addPromptResponse(foundPrompt ? foundPrompt.Response : defaultResponse);
+                this.promptSuggestions = (foundPrompt?.SuggestionData && foundPrompt.SuggestionData.length > 0) ? foundPrompt.SuggestionData : suggestions;
+            }, 2000);
+        }
+
+        function toolbarItemClicked(args) {
+            if (args.item.iconCss === 'e-icons e-refresh') {
+                this.prompts = [];
+                this.promptSuggestions = suggestions;
+                document.getElementById('reportData').value = '';
+            }
+        }
+    </script>
+    <script id="bannerContent" type="text/x-jsrender">
+        <div class="banner-content">
+            <div class="e-icons e-assistview-icon"></div>
+            <h4>AI Report Analyzer</h4>
+            <p>Paste your data above and click "Analyze with AI" to get intelligent insights and recommendations.</p>
+        </div>
+    </script>
+}
+
+@section Meta{
+    <meta name="description" content="This example demonstrates the AI Report Analyzer using ASP.NET MVC AIAssistView control for analyzing CSV, JSON, and plain text data." />
+}
+@section ActionDescription{
+    <div id="action-description">
+        <p>This sample demonstrates an AI-powered report analyzer that can process CSV, JSON, or plain text data to generate intelligent insights, statistics, and recommendations using the AI AssistView control.</p>
+    </div>
+}
+@section Description{
+    <div id="description">
+        <p>The AI Report Analyzer showcases how to integrate data analysis capabilities with the AI AssistView component. Key features include:</p>
+        <ul>
+            <li><strong>Multi-format Support:</strong> Accepts CSV, JSON, and plain text data formats</li>
+            <li><strong>Intelligent Analysis:</strong> Uses AI to identify patterns, issues, and trends in the data</li>
+            <li><strong>Interactive Interface:</strong> Provides a user-friendly form for data input and analysis</li>
+            <li><strong>Rich Responses:</strong> Generates detailed reports with statistics, insights, and recommendations</li>
+            <li><strong>Follow-up Suggestions:</strong> Offers contextual prompts for deeper analysis</li>
+        </ul>
+        <p>By using the <code>executePrompt</code> method, the analyzer can trigger AI analysis externally and generate outputs based on the <code>promptRequest</code> data returned. The response includes formatted analysis with visual elements for better readability.</p>
+    </div>
+}
+@section Title{
+    <title>ASP.NET MVC AI Report Analyzer - Syncfusion Demos</title>
+}
+@section Header{
+    <h1 class='sb-sample-text'>AI Report Analyzer using ASP.NET MVC AIAssistView Control</h1>
+}
