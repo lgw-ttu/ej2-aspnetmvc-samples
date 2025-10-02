@@ -244,6 +244,7 @@
     <Compile Include="Controllers\AIAssistView\StreamingController.cs" />
     <Compile Include="Controllers\AIAssistView\TemplateController.cs" />
     <Compile Include="Controllers\AIAssistView\AttachmentController.cs" />
+    <Compile Include="Controllers\AIAssistView\AIReportAnalyzerController.cs" />
     <Compile Include="Controllers\MultiColumnComboBox\KeyboardNavigationController.cs" />
     <Compile Include="Controllers\MultiColumnComboBox\TemplateController.cs" />
     <Compile Include="Controllers\MultiColumnComboBox\SortingController.cs" />
@@ -3624,6 +3625,7 @@
     <Content Include="Views\AIAssistView\Views.cshtml" />
     <Content Include="Views\AIAssistView\Streaming.cshtml" />
     <Content Include="Views\AIAssistView\Attachment.cshtml" />
+    <Content Include="Views\AIAssistView\AIReportAnalyzer.cshtml" />
     <Content Include="Views\MultiColumnComboBox\DefaultFunctionalities.cshtml" />
     <Content Include="Views\MultiColumnComboBox\RemoteData.cshtml" />
     <Content Include="Views\MultiColumnComboBox\Grouping.cshtml" />

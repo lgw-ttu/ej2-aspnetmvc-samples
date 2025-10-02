@@ -226,5 +226,41 @@ namespace EJ2MVCSampleBrowser.Models
                 },
             };
         }
+
+        public string[] GetReportAnalyzerSuggestionData()
+        {
+            return new string[] { "Analyze job status distribution", "Identify overdue items", "Generate performance metrics" };
+        }
+
+        public List<PromptResponseData> GetReportAnalyzerPromptResponseData()
+        {
+            return new List<PromptResponseData>
+            {
+                new PromptResponseData
+                {
+                    Prompt = "Analyze this job data and provide insights:\n\nJob ID, Client, Status, Days Open\n1001, ABC Corp, Open, 5\n1002, XYZ Inc, Delayed, 12\n\nProvide: 1) Summary statistics, 2) Issues identified, 3) Recommendations",
+                    Response = "<h4>📊 Job Data Analysis Report</h4><div class='analysis-section'><h5>1) Summary Statistics:</h5><ul><li><strong>Total Jobs:</strong> 2</li><li><strong>Average Days Open:</strong> 8.5 days</li><li><strong>Status Distribution:</strong><ul><li>Open: 1 job (50%)</li><li>Delayed: 1 job (50%)</li></ul></li></ul></div><div class='analysis-section'><h5>2) Issues Identified:</h5><ul><li>🚨 <strong>Critical Delay:</strong> Job 1002 (XYZ Inc) is significantly delayed at 12 days</li><li>⚠️ <strong>Risk Factor:</strong> 50% of jobs are experiencing delays</li><li>📈 <strong>Trend Alert:</strong> Average open time exceeds typical 5-day benchmark</li></ul></div><div class='analysis-section'><h5>3) Recommendations:</h5><ul><li>🎯 <strong>Immediate Action:</strong> Prioritize Job 1002 (XYZ Inc) - escalate to senior management</li><li>📋 <strong>Process Review:</strong> Investigate root causes of delays</li><li>⏰ <strong>Monitoring:</strong> Implement daily status checks for jobs open > 7 days</li><li>📞 <strong>Client Communication:</strong> Proactive updates to XYZ Inc regarding Job 1002</li></ul></div>",
+                    SuggestionData = new List<string> { "Show detailed breakdown by client", "Analyze trends over time", "Generate action plan template" }
+                },
+                new PromptResponseData
+                {
+                    Prompt = "Analyze job status distribution",
+                    Response = "<h4>📈 Job Status Distribution Analysis</h4><p>Based on the provided data sample:</p><div class='status-breakdown'><div class='status-item'><span class='status-badge open'>OPEN</span><span class='status-count'>1 job (50%)</span><span class='status-desc'>Within normal timeframe</span></div><div class='status-item'><span class='status-badge delayed'>DELAYED</span><span class='status-count'>1 job (50%)</span><span class='status-desc'>Requires immediate attention</span></div></div><p><strong>Key Insights:</strong></p><ul><li>Equal distribution suggests process bottlenecks</li><li>High delay percentage indicates systemic issues</li><li>Recommend implementing status tracking workflows</li></ul>",
+                    SuggestionData = new List<string> { "Compare with industry benchmarks", "Analyze by client priority", "Historical trend analysis" }
+                },
+                new PromptResponseData
+                {
+                    Prompt = "Identify overdue items",
+                    Response = "<h4>🚨 Overdue Items Analysis</h4><div class='overdue-alert'><h5>Critical Overdue Items:</h5><div class='overdue-item'><strong>Job ID 1002 - XYZ Inc</strong><br/>Status: <span class='status-delayed'>DELAYED</span><br/>Days Open: <span class='days-critical'>12 days</span><br/>Risk Level: <span class='risk-high'>HIGH</span></div></div><div class='analysis-metrics'><h5>Overdue Metrics:</h5><ul><li><strong>Overdue Rate:</strong> 50% (1 out of 2 jobs)</li><li><strong>Average Overdue Duration:</strong> 7 days beyond standard</li><li><strong>Client Impact:</strong> XYZ Inc relationship at risk</li></ul></div><div class='action-items'><h5>Immediate Actions Required:</h5><ol><li>Contact XYZ Inc within 24 hours</li><li>Assign senior resource to Job 1002</li><li>Implement escalation protocol</li><li>Schedule daily progress reviews</li></ol></div>",
+                    SuggestionData = new List<string> { "Create escalation workflow", "Generate client communication template", "Set up automated alerts" }
+                },
+                new PromptResponseData
+                {
+                    Prompt = "Generate performance metrics",
+                    Response = "<h4>📊 Performance Metrics Dashboard</h4><div class='metrics-grid'><div class='metric-card'><h6>Efficiency Metrics</h6><ul><li><strong>Average Processing Time:</strong> 8.5 days</li><li><strong>On-Time Completion Rate:</strong> 50%</li><li><strong>Resource Utilization:</strong> Analyzing...</li></ul></div><div class='metric-card'><h6>Quality Indicators</h6><ul><li><strong>Client Satisfaction:</strong> At Risk (delays detected)</li><li><strong>Rework Rate:</strong> To be determined</li><li><strong>Compliance Score:</strong> Review needed</li></ul></div><div class='metric-card'><h6>Operational Health</h6><ul><li><strong>Bottleneck Identification:</strong> Process delays</li><li><strong>Capacity Planning:</strong> Resources stretched</li><li><strong>Trend Analysis:</strong> Declining performance</li></ul></div></div><div class='recommendations'><h5>Performance Improvement Plan:</h5><ol><li>Implement daily standup meetings</li><li>Deploy automated progress tracking</li><li>Establish client communication protocols</li><li>Create performance dashboards</li></ol></div>",
+                    SuggestionData = new List<string> { "Set performance targets", "Compare with historical data", "Generate improvement roadmap" }
+                }
+            };
+        }
     }
 }
