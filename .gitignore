@@ -96,7 +96,10 @@ publish/
 # ErrorLog
 *.txt
 *.pubxml
+
+
 /tools
 /NuGet.config
-packages.config
 /Scripts/ej2
+/Content/ej2
+
