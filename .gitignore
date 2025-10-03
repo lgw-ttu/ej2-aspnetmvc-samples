@@ -1,0 +1,100 @@
+## Ignore Visual Studio temporary files, build results, and
+## user-specific files
+
+# Build results
+bin/
+obj/
+[Ll]og/
+*.log
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.generated.cs
+!GlassWorkflow.Models.DataAccess/Models/DataAccess/*.generated.cs
+!GlassWorkflow/Models/DataAccess/GlassManagerOwner/*.generated.cs
+
+# VS Code settings
+.vscode/
+
+# Rider settings
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+*.nuspec
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET temporary files
+**/App_Data/Logs/
+**/App_Data/cache/
+**/App_Data/temp/
+
+# IIS Express
+.vs/
+*.vspscc
+*.vssscc
+*.dbmdl
+*.dbproj.schemaview
+*.publish.xml
+
+# Web server lock files
+*.pid
+
+# SQL Server files
+*.mdf
+*.ldf
+
+# Others
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+*.DotSettings
+
+# Coverage results
+*.coverage
+*.coveragexml
+TestResults/
+*.testresult
+*.trx
+
+# StyleCop
+StyleCopReport.xml
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+
+# JetBrains Rider
+.idea/
+
+# Logs
+*.log
+ErrorLog.csv
+TaskLog.csv
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+
+# Publish output
+publish/
+
+# ErrorLog
+*.txt
+*.pubxml
+/tools
+/NuGet.config
