@@ -1,4 +1,4 @@
-@using Syncfusion.EJ2.InteractiveChat
+﻿@using Syncfusion.EJ2.InteractiveChat
 @using Syncfusion.EJ2.Navigations
 @using Syncfusion.EJ2.SplitButtons
 @using Syncfusion.EJ2
@@ -255,14 +255,47 @@
             }
         }
 
+        //function onPromptRequest(args) {
+        //    setTimeout(function () {
+        //        var foundPrompt = prompts.find(prompt => prompt.Prompt == args.prompt);
+        //        var defaultResponse = 'For real-time prompt processing, connect the AI AssistView control to your preferred AI service, such as OpenAI or Azure Cognitive Services. Ensure you obtain the necessary API credentials to authenticate and enable seamless integration.';
+        //        assistObj.addPromptResponse(foundPrompt ? foundPrompt.Response : defaultResponse);
+        //        assistObj.promptSuggestions = (foundPrompt?.SuggestionData && foundPrompt.SuggestionData.length > 0) ? foundPrompt.SuggestionData : suggestions;
+        //    }, 2000);
+        //}
+
         function onPromptRequest(args) {
-            setTimeout(function () {
-                var foundPrompt = prompts.find(prompt => prompt.Prompt == args.prompt);
-                var defaultResponse = 'For real-time prompt processing, connect the AI AssistView control to your preferred AI service, such as OpenAI or Azure Cognitive Services. Ensure you obtain the necessary API credentials to authenticate and enable seamless integration.';
-                assistObj.addPromptResponse(foundPrompt ? foundPrompt.Response : defaultResponse);
-                assistObj.promptSuggestions = (foundPrompt?.SuggestionData && foundPrompt.SuggestionData.length > 0) ? foundPrompt.SuggestionData : suggestions;
-            }, 2000);
+            console.log("onPromptRequest...");
+            fetch('/Home/GetAIResponse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: args.prompt })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(responseText => {
+                    const text = responseText.trim() || 'No response received.';
+                    stopStreaming = false;
+                    //streamResponse(text);
+                    assistObj.addPromptResponse(text);
+                })
+                .catch(error => {
+                    console.error("Here Error:", error);
+                    assistObj.addPromptResponse('⚠️ Something went wrong while connecting to the AI service. Please try again later.');
+                    stopStreaming = true;
+                });
         }
+
+        function stopRespondingClick() {
+            stopStreaming = true;
+        }
+
     </script>
     <script id="promptItemTemplate" type="text/x-jsrender">
         <div class="promptItemContent">

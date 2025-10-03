@@ -1,4 +1,4 @@
-@using Syncfusion.EJ2.InteractiveChat
+﻿@using Syncfusion.EJ2.InteractiveChat
 @using Syncfusion.EJ2.Navigations
 @using Syncfusion.EJ2.SplitButtons
 @using Syncfusion.EJ2
@@ -250,7 +250,34 @@
         }
 
         function onPromptRequest(args) {
-            execute(args.prompt);
+            //OLD CODE
+            //execute(args.prompt);
+
+            //NEW CODE
+
+
+            fetch('/?handler=GetAIResponse', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: args.prompt })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(responseText => {
+                    const text = responseText.trim() || 'No response received.';
+                    stopStreaming = false;
+                    streamResponse(text);
+                })
+                .catch(error => {
+                    assistObj.addPromptResponse('⚠️ Something went wrong while connecting to the AI service. Please try again later.');
+                    stopStreaming = true;
+                });
         }
 
         function onListViewSelect(args) {

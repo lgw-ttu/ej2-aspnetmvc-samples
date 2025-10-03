@@ -57,11 +57,11 @@ namespace EJ2MVCSampleBrowser.Controllers
         }
 
         [System.Web.Mvc.HttpPost]
-        public async Task<ActionResult> GetAIResponse([System.Web.Http.FromBody] PromptRequest request)
+        public async Task<ActionResult> GetAIResponse(PromptRequest request)
         {
             try
             {
-                _logger.LogInformation("Received request with prompt: {Prompt}", request?.Prompt);
+                //_logger.LogInformation("Received request with prompt: {Prompt}", request?.Prompt);
 
                 if (string.IsNullOrEmpty(request?.Prompt))
                 {
@@ -87,16 +87,16 @@ namespace EJ2MVCSampleBrowser.Controllers
                 string responseText = completion.Value.Content[0].Text;
                 if (string.IsNullOrEmpty(responseText))
                 {
-                    _logger.LogError("Azure OpenAI API returned no text.");
+                    //_logger.LogError("Azure OpenAI API returned no text.");
                     return BadRequest("No response from Azure OpenAI.");
                 }
 
-                _logger.LogInformation("Azure OpenAI response received: {Response}", responseText);
+                //_logger.LogInformation("Azure OpenAI response received: {Response}", responseText);
                 return Json(responseText);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Exception in Azure OpenAI call: {Message}", ex.Message);
+                //_logger.LogError("Exception in Azure OpenAI call: {Message}", ex.Message);
                 return BadRequest($"Error generating response: {ex.Message}");
             }
         }
