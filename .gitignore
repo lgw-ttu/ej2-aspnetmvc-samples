@@ -98,3 +98,5 @@ publish/
 *.pubxml
 /tools
 /NuGet.config
+packages.config
+/Scripts/ej2
